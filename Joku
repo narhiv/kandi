@@ -1,0 +1,113 @@
+#MFHD derivcurves, trigonometric function examples w/ constant outliers
+set.seed(123)	
+n<-50; #Number of curves
+T<-60; #Number of "observations"
+t.<-seq(0,2*pi,l=T) #Set for trigonometric multipliers
+t3. <- seq(1,1,l=T) #Set for constant functions
+y<-matrix(NA,50,T) #Set matrix to save values
+z <- matrix(NA,1,T) #
+for(i in 1:50)	y[i,]<-runif(1,0,1)*sin(t.)+runif(1,0,1)*cos(t.) #values of matrix y from random uniform distribution w/ trig. multipliers
+for (j in 1:1) z[j,] <- runif(1,0,0)*t3. #constant outliers 
+z
+plot(fdata(z))
+y2<-derivcurves(y) #set derivatives of y
+plot(fdata(y),col="red",lty=1,ask=TRUE)
+par(mfrow=c(1,1))
+lines(fdata(y2),col="green",lty=1)
+plot(fdata(y),xaxs="i", yaxs="i")
+lines(fdata(y2))
+plot(fdata(y2))
+depth.FM(fdata(y),draw=TRUE)
+depth.FM(fdata(y2),draw=TRUE)
+ypz <- rbind(y,z) #Combine y and z for outlier detection tests
+plot(fdata(ypz))
+ypz2 <- derivcurves(ypz)
+plot(fdata(ypz2))
+#Outlier detection tests
+#depth.FM(fdata(ypz),trim=0.1,draw=TRUE)
+#depth.mode(fdata(ypz),trim=0.1,draw=TRUE)
+#depth.RP(fdata(ypz),trim=0.1,draw=TRUE)
+#depth.RT(fdata(ypz),trim=0.1,draw=TRUE)
+#depth.FSD(fdata(ypz),trim=0.1,draw=TRUE)
+#depth.KFSD(fdata(ypz),trim=0.1,draw=TRUE)
+#depth.FM(fdata(ypz),draw=TRUE)
+#depth.mode(fdata(ypz),draw=TRUE)
+#depth.RP(fdata(ypz),draw=TRUE)
+#depth.RT(fdata(ypz),draw=TRUE)
+#depth.FSD(fdata(ypz),draw=TRUE)
+#depth.KFSD(fdata(ypz),draw=TRUE)
+#Calculate MFHD in the where y=data, y2=derivatives (the typical MFHD case)
+mfh <- MFHD(y,y2)
+mfds <- mfh$MFHDdepth
+plot(c(0,60),c(-1.3,1.25),type="n",xlab="t",ylab="y") #Empty plot window
+#For-looping each y-line and assigning them light-to-dark values based on their MFHDdepth-values
+for (i in 1:33) {
+  lines(y[i,],col=gray(1-2.4*mfds[i]))
+}
+#Checking which functions attain the highest depth values with indices
+sort(mfds,index.return=TRUE)
+#Alternatively if just the indices are required:
+order(mfds)
+#If just the values are required:
+mfds[order(mfds)]
+#Testailua toimiiko ylläoleva kuten halutaan
+lines(y[14],col="blue")
+lines(y[5,],col="blue")
+lines(y[22,],col="green")
+lines(y[7,],col="yellow")
+lines(y[13,],col="magenta")
+#Looppaa funktioiden yli, lines komennolla yksi funktio lisää aina
+mfhypz <- MFHD(ypz,ypz2)
+plot(c(0,60),c(-1.3,1.25),type="n",xlab="t",ylab="y") #Empty plot window
+#For-looping each y-line and assigning them light-to-dark values based on their MFHDdepth-values
+for (i in 1:51) {
+  lines(ypz[i,],col=gray(1-2*mfhypz$MFHDdepth[i]))
+}
+sort(mfhypz$MFHDdepth,index.return=TRUE)
+
+fmypz <- depth.FM(fdata(ypz))
+sort(fmypz$dep,index.return=TRUE)
+#Ylläoleva hyvä esimerkki siihen missä kumpikaan ei toimi? FM antaa outliereille alempia depth-arvoja,
+#mutta ei kuitenkaan kaikkein alhaisimpia (ja arvot silti aika korkeita)
+#MFHD puolestaan antaa keskitason arvoja outliereille
+#Helppo esimerkki missä molemmat toimivat outlier detectionissa on sellainen, että
+#outlierit ovat (esim.) vakiofunktioita selvästi jakauman alapuolella
+
+#Linearly increasing functions from uniform distribution
+set.seed(123)	
+n2<-30;
+T2<-60;	 
+t2.<-seq(1,5,l=T2)
+y3<-matrix(NA,n2,T2)
+for(i in 1:n2)	y3[i,]<-runif(1,0,1)*t2.
+y4<-derivcurves(y3)
+#for(j in 1:3)	z2[j,]<-runif(1,0,5)+sin(t.)+runif(1,0,1)*cos(t.), trigonometric functions on interval 1-4
+#plot(fdata(z2))
+plot(fdata(y3),col="red",lty=1)
+lines(fdata(z2))
+par(mfrow=c(1,1))
+depth.FM(fdata(y3),draw=TRUE)
+depth.FM(fdata(y4),draw=TRUE)
+plot(fdata(y3),col="gray")
+lines(y3[27,],col="magenta")
+plot(fdata(y4))
+mfh3<-MFHD(y3,y4,alpha=NULL)
+plot(mfh3$MFHDdepth[1:50])
+plot(c(0,60),c(0,5),type="n",xlab="t",ylab="y")
+for (i in 1:n2) {
+  lines(y3[i,],col=gray(0.6-mfh3$MFHDdepth[i]))
+}
+lines(y3[28,],col="magenta")
+lines(y3[14,],col="magenta")
+sort(mfh3$MFHDdepth,index.return=TRUE)
+fmy3 <- depth.FM(fdata(y3))
+sort(fmy3$dep,index.return=TRUE)
+
+set.seed(7)
+z2 <- matrix(NA,3,T2)
+for(j in 1:3)	z2[j,]<-runif(1,-1,3)*sin(t.)*cos(t.)#, rising trigonometric functions
+plot(fdata(z2))
+y3z2 <- rbind(y3,z2)
+y3z2d <- derivcurves(y3z2)
+plot(fdata(y3z2))
+plot(fdata(y3z2d))
