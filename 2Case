@@ -27,13 +27,14 @@ for (j in 1:100) {
   fmypz3 <- depth.FM(fdata(ypz3))
   sort(fmypz3$dep,index.return=TRUE)
   if (mfhypz2$MFHDdepth[,100]==min(mfhypz2$MFHDdepth)) {
-    vals5=c(vals5,1)
+    vals3=c(vals3,1)
   } else {
-    vals5=c(vals5,0)
+    vals3=c(vals3,0)
   } 
   if (fmypz3$dep[100]==min(fmypz3$dep)) {
-    vals6=c(vals6,1)
+    vals4=c(vals4,1)
   } else {
-    vals6=c(vals6,0)
+    vals4=c(vals4,0)
   } 
 }
+
