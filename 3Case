@@ -1,3 +1,4 @@
+#MAHDOLLINEN VIIMEINEN CASE MISSÄ KUMPIKAAN EI TOIMI?
 vals5=c()
 vals6=c()
 for (j in 1:100) {
@@ -5,27 +6,27 @@ n<-99; #Number of curves
 T<-60; #Number of "observations"
 t.<-seq(0,2*pi,l=T) #Set for trigonometric multipliers
 t3.<-seq(1,1,l=T) #Set for constant functions
-y2<-matrix(NA,n,T) #Set matrix to save values
-z2 <- matrix(NA,1,T) #
-for(i in 1:n)	y2[i,]<-runif(1,0,1)*sin(t.)+runif(1,0,1)*cos(t.) #values of matrix y from random uniform distribution w/ trig. multipliers
-for (j in 1:1) z2[j,] <- 0.5*sin(t.)+0.5*cos(t.)+0.1*sin(300*t.)
-ypz3 <- rbind(y2,z2)
-ypz4 <- derivcurves(ypz3)
-plot(fdata(ypz3),col="gray")
-lines(fdata(ypz3[100,]),col="magenta")
-lines(fdata(ypz3[3,]),col="blue")
-mfhypz2 <- MFHD(ypz3,ypz4)
+y3<-matrix(NA,n,T) #Set matrix to save values
+z3 <- matrix(NA,1,T) #
+for(i in 1:n)	y3[i,]<-runif(1,0,1)*sin(t.)+runif(1,0,1)*cos(t.) #values of matrix y from random uniform distribution w/ trig. multipliers
+for (j in 1:1) z3[j,] <- 0.5*sin(t.)+0.5*cos(t.)+0.1*sin(300*t.)
+ypz5 <- rbind(y3,z3)
+ypz6 <- derivcurves(ypz4)
+plot(fdata(ypz5),col="gray")
+lines(fdata(ypz5[100,]),col="black")
+#lines(fdata(ypz5[20,]),col="blue")
+mfhypz3 <- MFHD(ypz5,ypz6)
 
 plot(c(0,60),c(-1.3,1.25),type="n",xlab="t",ylab="y") #Empty plot window
 #For-looping each y-line and assigning them light-to-dark values based on their MFHDdepth-values
 for (i in 1:100) {
-  lines(ypz3[i,],col=gray(0.7-mfhypz2$MFHDdepth[i]))
+  lines(ypz5[i,],col=gray(0.7-mfhypz3$MFHDdepth[i]))
 }
-sort(mfhypz2$MFHDdepth,index.return=TRUE)
+sort(mfhypz3$MFHDdepth,index.return=TRUE)
 
-fmypz3 <- depth.FM(fdata(ypz3))
+fmypz3 <- depth.FM(fdata(ypz5))
 sort(fmypz3$dep,index.return=TRUE)
-if (mfhypz2$MFHDdepth[,100]==min(mfhypz2$MFHDdepth)) {
+if (mfhypz3$MFHDdepth[,100]==min(mfhypz3$MFHDdepth)) {
   vals5=c(vals5,1)
 } else {
   vals5=c(vals5,0)
