@@ -25,6 +25,9 @@ mfhypz3 <- MFHD(ypz5,ypz6)
 #}
 #sort(mfhypz3$MFHDdepth,index.return=TRUE)
 
+#plot(fdata(ypz5),col="gray", xlab="Time",ylab="Value",main="\n")
+#lines(ypz5[100,],col="black")
+
 #fmypz3 <- depth.FM(fdata(ypz5))
 #sort(fmypz3$dep,index.return=TRUE)
 if (mfhypz3$MFHDdepth[,100]==min(mfhypz3$MFHDdepth)) {
