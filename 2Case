@@ -26,14 +26,17 @@ for (j in 1:100) {
  # for (i in 1:100) {
 #   lines(ypz3[i,],col=gray(0.7-mfhypz2$MFHDdepth[i]))
  # }
-  sort(mfhypz2$MFHDdepth,index.return=TRUE)
+  #sort(mfhypz2$MFHDdepth,index.return=TRUE)
+  
+  #plot(fdata(ypz3),col="gray", xlab="Time",ylab="Value",main="\n")
+  #lines(ypz3[100,],col="black")
   
   fmypz3 <- depth.FM(fdata(ypz3))
   sort(fmypz3$dep,index.return=TRUE)
   if (mfhypz2$MFHDdepth[,100]==min(mfhypz2$MFHDdepth)) {
-    vals3=c(vals4,1)
+    vals3=c(vals3,1)
   } else {
-    vals3=c(vals4,0)
+    vals3=c(vals3,0)
   } 
   if (fmypz3$dep[100]==min(fmypz3$dep)) {
     vals4=c(vals4,1)
