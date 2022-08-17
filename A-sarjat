@@ -1,0 +1,76 @@
+eps <- runif(100,0,0.5)
+a1 <- 0.4
+a2 <- 0.3
+a3 <- -0.15
+xt <- c()
+xt[1] <- eps[1]
+xt[2] <- a1*xt[1]+eps[2]
+xt[3] <- a1*xt[2]+a2*xt[1]+eps[3]
+#x[4] <- a1*x[3]+a2*x[2]+a3*x[1]+eps[4]
+for (i in 4:100) {
+  xt[i] <- a1*xt[i-1]+a2*xt[i-2]+a3*xt[i-3]+eps[i]
+  #xt <- c(xt,xt[i])
+} #1.vaihe
+#xt <- xt[1:100]
+
+plot.ts(xt)
+yt <- xt+3 #2.vaihe
+
+plot.ts(yt)
+trend <- seq(0.5,10,l=100)
+zt <- yt+trend #3.vaihe
+plot.ts(zt)
+
+ut <- exp(zt)
+plot.ts(ut) #Plottaa sarja u_t
+zht <- log(ut) #Vaihe 4b
+plot.ts(logtr)
+plot.ts(zht)
+aht <- diff(zht,lag=1,differences=1)
+#diff(zht)
+plot.ts(aht)
+xht <- aht - mean(aht) #Vaihe 4c
+
+plot.ts(xht)
+plot.ts(ut,xlim=c(0,100),ylim=c(-1000,720000)) #Vaihe 5
+
+lines(zht*54000)
+lines(xht*80000) #Vaihe 6
+
+u94 <- ut[1:94]
+zh94 <- zht[1:95]
+xh94 <- xht[1:94] #Vaihe 7
+
+malli <- arima(xh94,order=c(3,0,0)) #AR(3)-mallin formulointi
+enne1 <- predict(malli,n.ahead=5) #5 askeleen ennuste mallilla
+xh95enne <- c(xh94,enne1$pred) #Alkuperäiset havainnot yhdistetään ennusteeseen
+plot.ts(xht)
+lines(xh95enne,col="purple") #Ennusteet alkuperäisen päälle
+
+kaht <- mean(aht[1:94]) #Keskiarvo 94 ensimmäisestä havainnosta
+aenne <- c() 
+for (i in 1:5) {
+  aenne[i] <-xh95enne[94+i] + mean(aht) #Uusien arvojen appendaaminen a:lle
+}
+aenne
+zhtenne <- c()
+for (i in 1:5) {
+  zhtenne[i] <- xh95enne[94+i] + zht[93+i] #Z-hattu appendaaminen
+}
+zhtenne 
+plot.ts(zht)
+zh95enne <- c(zh94,zhtenne)
+lines(zh95enne,col="purple") #Z-ennusteet alkuperäisen päälle
+
+uenne <- c()
+for (i in 1:5) {
+  uenne[i] <- exp(zh95enne[95+i])
+}
+uenne
+u95enne <- c(u94,uenne)
+plot.ts(u95enne)
+#Alternative:
+set.seed(123)
+pts <- arima.sim(model=list(ar=c(0.4,0.3,-0.15)),n=100)
+plot.ts(pts)
+ptsplusconst <- pts + 3
