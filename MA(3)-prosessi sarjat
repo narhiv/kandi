@@ -1,6 +1,6 @@
-eps <- runif(100,-0.4,0.5)
-theta1 <- 0.5
-theta2 <- 0.15
+eps <- runif(100,-0.3,0.5)
+theta1 <- 0.25
+theta2 <- 0.5
 theta3 <- -0.4
 
 y <- c()
@@ -13,11 +13,13 @@ for (i in 5:100) {
 }
 plot.ts(y)
 
+#y <- arima.sim(model=list(order=c(0,0,3),ma=c(0.3,0.3,-0.3)),n=100)
+
 x=c()
 x[1] <- y[1]
 for (i in 2:100) {
   x[i] <- y[i] + x[i-1]
-} #runif(1,-0.3,0.3) kerroin jälkimmäiselle termille jos haluaa vielä enemmän heiluntaa
+} #runif(1,-0.3,0.3)-kerroin jälkimmäiselle termille mahdollinen?
 plot.ts(x)
 
 u1=c()
@@ -35,11 +37,13 @@ for (i in 2:100) {
 }
 plot.ts(u)
 
-xh <- diff(u)
+xh <- diff(u) #Jos laittaa u1 palauttaa x_t sarjan
+xh <- c(0,xh)
 plot.ts(xh)
 yh <- diff(xh)
+yh <- c(0,yh)
 plot.ts(yh)
-yhe <- yh[1:93]
+yhe <- yh[1:95]
 #x <- x[!x %in% 2:10]
 
 malliMA <- arima(yhe,order=c(0,0,3))
@@ -47,18 +51,27 @@ yhEnne <- predict(malliMA, n.ahead=5)
 yhEnnustus <- c(yhe,yhEnne$pred)
 plot.ts(yhEnnustus)
 
-xhe <- xh[1:94]
-for (i in 95:99) {
+xhe <- xh[1:95]
+for (i in 96:100) {
   xhe[i] <- yhEnnustus[i]+xh[i-1]
 }
+plot.ts(xh)
+lines(xhe,col="purple")
+
+plot.ts(xh, xlim=c(80,100),ylim=c(-40,80))
+lines(xhe, col="purple")
 
 uhe <- u[1:95]
 for (i in 96:100) {
   uhe[i] <- xhe[i]+u[i-1]
 }
-plot.ts(uhe)
-plot.ts(c(0,0,uhe[1:98]))
-xhdiff <- c()
-for (i in 1:100) {
-  xhdiff[i] <- u[i]-u[i-1]
-}
+plot.ts(u)
+lines(uhe, col="purple")
+
+plot.ts(u, xlim=c(80,100),ylim=c(800,1200))
+lines(uhe, col="purple")
+#xhdiff <- c()
+#for (i in 1:100) {
+ # xhdiff[i] <- u[i]-u[i-1]
+#}
+
