@@ -1,0 +1,64 @@
+eps <- runif(100,-0.4,0.5)
+theta1 <- 0.5
+theta2 <- 0.15
+theta3 <- -0.4
+
+y <- c()
+y[1] <- eps[1]+0.2
+y[2] <- theta1*eps[1]+eps[2]+0.2
+y[3] <- theta1*eps[2]+theta2*eps[1]+eps[3]+0.2
+y[4] <- theta1*eps[3]+theta2*eps[2]+theta3*eps[1]+eps[4]+0.2
+for (i in 5:100) {
+  y[i] <- theta1*eps[i-1]+theta2*eps[i-2]+theta3*eps[i-3]+eps[i]+0.2
+}
+plot.ts(y)
+
+x=c()
+x[1] <- y[1]
+for (i in 2:100) {
+  x[i] <- y[i] + x[i-1]
+} #runif(1,-0.3,0.3) kerroin jälkimmäiselle termille jos haluaa vielä enemmän heiluntaa
+plot.ts(x)
+
+u1=c()
+u1[1] <- x[1]
+for (i in 2:100) {
+  u1[i] <- (x[i] + u1[i-1])
+}
+plot.ts(u1)
+
+
+u=c()
+u[1] <- x[1]
+for (i in 2:100) {
+  u[i] <- (x[i] + u[i-1]*runif(1,0.95,1.05))
+}
+plot.ts(u)
+
+xh <- diff(u)
+plot.ts(xh)
+yh <- diff(xh)
+plot.ts(yh)
+yhe <- yh[1:93]
+#x <- x[!x %in% 2:10]
+
+malliMA <- arima(yhe,order=c(0,0,3))
+yhEnne <- predict(malliMA, n.ahead=5)
+yhEnnustus <- c(yhe,yhEnne$pred)
+plot.ts(yhEnnustus)
+
+xhe <- xh[1:94]
+for (i in 95:99) {
+  xhe[i] <- yhEnnustus[i]+xh[i-1]
+}
+
+uhe <- u[1:95]
+for (i in 96:100) {
+  uhe[i] <- xhe[i]+u[i-1]
+}
+plot.ts(uhe)
+plot.ts(c(0,0,uhe[1:98]))
+xhdiff <- c()
+for (i in 1:100) {
+  xhdiff[i] <- u[i]-u[i-1]
+}
