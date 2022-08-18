@@ -1,3 +1,4 @@
+set.seed(45) #6, 12, 41,45(!), 61, 92, 94, 97, 98, 102, 711, 658, 666, 645, 42069
 eps <- runif(100,0,0.5) #Uniform distribution from which the errors are drawn
 a1 <- 0.4 #Alpha1 parameter
 a2 <- 0.3 #Alpha2 parameter
@@ -13,7 +14,7 @@ for (i in 4:100) {
 } #1.vaihe
 #xt <- xt[1:100]
 
-plot.ts(xt) #Plot the attained AR(3)-process
+plot.ts(xt) #Plot the attained AR(3)-process, musta
 yt <- xt+3 #Add a constant to standardize series
 plot.ts(yt)
 
@@ -22,22 +23,32 @@ zt <- yt+trend #Add the increasing trend to y_t
 plot.ts(zt)
 
 ut <- exp(zt) #Exponential function of z_t
-plot.ts(ut) #Plot the exponential function
+plot.ts(ut,lwd=8,ylab="\n",yaxt="n") #Plot the exponential function
 zht <- log(ut) #Logarithm of the exponential function (redundant in this case since it equals z_t, done only due to
 #scenario being formulated such that we assume we don't know the previous series)
 #plot.ts(logtr)
-plot.ts(zht)
+plot.ts(zht,col="chartreuse4",lwd=8,ylab="\n",yaxt="n")
 aht <- diff(zht,lag=1,differences=1) #Take the difference, a hat is merely an auxiliary variable to help in computations
 aht <- c(0,aht)#Supplement the vector with an initial zero to equal 100 observations
 #diff(zht)
 plot.ts(aht)
 xht <- aht - mean(aht) #Stationarize the time series (and normalize by reducing the mean)
 #xht <- c(0,xht)
-plot.ts(xht)
+plot.ts(xht,col="deepskyblue3",lwd=8,ylab="\n",yaxt="n")
 
-plot.ts(ut,xlim=c(0,100),ylim=c(-1000,720000)) #Plotting all functions into the same graph (?)
-lines(zht*54000,col="red")
-lines(xht*80000,col="blue") 
+plot.ts(ut,xlim=c(0,100),ylim=c(-20000,720000),lwd=6,ylab="\n",yaxt="n") #Plotting all functions into the same graph (?)
+lines(zht*30000-112000,col="chartreuse4",lwd=6)
+
+plot.ts(ut,xlim=c(0,100),ylim=c(-20000,720000),lwd=6,ylab="\n",yaxt="n") #Plotting all functions into the same graph (?)
+#lines(zht*24000-89000,col="chartreuse4",lwd=8)
+lines(xht*80000,col="deepskyblue3",lwd=6) 
+
+plot.ts(zht-4,ylim=c(-1,15),col="chartreuse4",lwd=6,ylab="\n",yaxt="n")
+lines(xht,col="deepskyblue3",lwd=6) 
+
+plot.ts(ut,xlim=c(0,100),ylim=c(-20000,720000),lwd=6,ylab="\n",yaxt="n") #Plotting all functions into the same graph (?)
+lines(zht*30000-112000,col="chartreuse4",lwd=6)
+lines(xht*80000,col="deepskyblue3",lwd=6) 
 
 u95 <- ut[1:95]
 zh95 <- zht[1:95]
@@ -46,9 +57,9 @@ xh95 <- xht[1:95] #Delete the last 5 observations from each
 malli <- arima(xh95,order=c(3,0,0)) #AR(3)-mallin formulointi
 enne1 <- predict(malli,n.ahead=5) #5 askeleen ennuste mallilla
 xh95enne <- c(xh95,enne1$pred) #Alkuperäiset havainnot yhdistetään ennusteeseen
-plot.ts(xht)
-plot.ts(xht,xlim=c(80,100),ylim=c(-0.4,0.4))
-lines(xh95enne,col="purple") #Ennusteet alkuperäisen päälle
+plot.ts(xht,col="deepskyblue3",lwd=6,ylab="\n",yaxt="n")
+plot.ts(xht,xlim=c(80,100),ylim=c(-0.4,0.4),lwd=6,col="deepskyblue3",ylab="\n",yaxt="n")
+lines(xh95enne,col="purple",lwd=6) #Ennusteet alkuperäisen päälle
 
 kaht <- mean(aht[1:95]) #Keskiarvo 95 ensimmäisestä havainnosta
 ahte <- aht[1:95] 
@@ -60,20 +71,20 @@ for (i in 96:100) {
   zh95[i] <- ahte[i] + zht[i-1] #Z-hattu appendaaminen
 }
 zh95
-plot.ts(zht)
-lines(zh95,col="purple")
+plot.ts(zht,col="chartreuse4",lwd=6,ylab="\n",yaxt="n")
+lines(zh95,col="purple",lwd=6)
 
-plot.ts(zht,xlim=c(80,100),ylim=c(10,14))
-lines(zh95,col="purple") #Z-ennusteet alkuperäisen päälle
+plot.ts(zht,xlim=c(80,100),ylim=c(10,14),col="chartreuse4",lwd=6,ylab="\n",yaxt="n")
+lines(zh95,col="purple",lwd=6) #Z-ennusteet alkuperäisen päälle
 
 for (i in 96:100) {
   u95[i] <- exp(zh95[i])
 }
-plot.ts(ut)
-lines(u95,col="purple")
+plot.ts(ut,lwd=6,ylab="\n",yaxt="n")
+lines(u95,col="purple",lwd=6)
 
-plot.ts(ut,xlim=c(80,100))
-lines(u95,col="purple")
+plot.ts(ut,xlim=c(80,100),lwd=6,ylab="\n",yaxt="n")
+lines(u95,col="purple",lwd=6)
 #Alternative:
 #set.seed(123)
 #pts <- arima.sim(model=list(ar=c(0.4,0.3,-0.15)),n=100)
