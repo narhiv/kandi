@@ -46,7 +46,7 @@ lines(xht*80000,col="deepskyblue3",lwd=6)
 plot.ts(zht-4,ylim=c(-1,15),col="chartreuse4",lwd=6,ylab="\n",yaxt="n")
 lines(xht,col="deepskyblue3",lwd=6) 
 
-plot.ts(ut,xlim=c(0,100),ylim=c(-20000,720000),lwd=6,ylab="\n",yaxt="n") #Plotting all functions into the same graph (?)
+plot.ts(ut,xlim=c(0,100),ylim=c(-30000,1200000),lwd=6,ylab="\n",yaxt="n") #Plotting all functions into the same graph (?)
 lines(zht*30000-112000,col="chartreuse4",lwd=6)
 lines(xht*80000,col="deepskyblue3",lwd=6) 
 
@@ -57,8 +57,8 @@ xh95 <- xht[1:95] #Delete the last 5 observations from each
 malli <- arima(xh95,order=c(3,0,0)) #AR(3)-mallin formulointi
 enne1 <- predict(malli,n.ahead=5) #5 askeleen ennuste mallilla
 xh95enne <- c(xh95,enne1$pred) #Alkuperäiset havainnot yhdistetään ennusteeseen
-plot.ts(xht,col="deepskyblue3",lwd=6,ylab="\n",yaxt="n")
-plot.ts(xht,xlim=c(80,100),ylim=c(-0.4,0.4),lwd=6,col="deepskyblue3",ylab="\n",yaxt="n")
+plot.ts(xht,col="deepskyblue3",ylim=c(-0.7,0.7),lwd=6,ylab="\n",yaxt="n")
+plot.ts(xht,xlim=c(80,100),ylim=c(-0.7,0.7),lwd=6,col="deepskyblue3",ylab="\n",yaxt="n")
 lines(xh95enne,col="purple",lwd=6) #Ennusteet alkuperäisen päälle
 
 kaht <- mean(aht[1:95]) #Keskiarvo 95 ensimmäisestä havainnosta
@@ -75,16 +75,16 @@ plot.ts(zht,col="chartreuse4",lwd=6,ylab="\n",yaxt="n")
 lines(zh95,col="purple",lwd=6)
 
 plot.ts(zht,xlim=c(80,100),ylim=c(10,14),col="chartreuse4",lwd=6,ylab="\n",yaxt="n")
-lines(zh95,col="purple",lwd=6) #Z-ennusteet alkuperäisen päälle
+lines(zh95[96:100],col="purple",lwd=6) #Z-ennusteet alkuperäisen päälle
 
 for (i in 96:100) {
   u95[i] <- exp(zh95[i])
 }
-plot.ts(ut,lwd=6,ylab="\n",yaxt="n")
-lines(u95,col="purple",lwd=6)
+plot.ts(ut,lwd=6,ylab="\n",yaxt="n",ylim=c(0,1150000))
+lines(c(rep(NA,95),u95[96:100]),col="purple",lwd=6)
 
 plot.ts(ut,xlim=c(80,100),lwd=6,ylab="\n",yaxt="n")
-lines(u95,col="purple",lwd=6)
+lines(u95[96:100],col="purple",lwd=6)
 #Alternative:
 #set.seed(123)
 #pts <- arima.sim(model=list(ar=c(0.4,0.3,-0.15)),n=100)
