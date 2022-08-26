@@ -1,15 +1,15 @@
-eps <- runif(100,-0.3,0.5)
+eps <- runif(100,-1,2)
 theta1 <- 0.25
 theta2 <- 0.5
 theta3 <- -0.4
 
 y <- c()
-y[1] <- eps[1]+0.2
-y[2] <- theta1*eps[1]+eps[2]+0.2
-y[3] <- theta1*eps[2]+theta2*eps[1]+eps[3]+0.2
-y[4] <- theta1*eps[3]+theta2*eps[2]+theta3*eps[1]+eps[4]+0.2
+y[1] <- eps[1]+0.5
+y[2] <- theta1*eps[1]+eps[2]+0.5
+y[3] <- theta1*eps[2]+theta2*eps[1]+eps[3]+0.5
+y[4] <- theta1*eps[3]+theta2*eps[2]+theta3*eps[1]+eps[4]+0.5
 for (i in 5:100) {
-  y[i] <- theta1*eps[i-1]+theta2*eps[i-2]+theta3*eps[i-3]+eps[i]+0.2
+  y[i] <- theta1*eps[i-1]+theta2*eps[i-2]+theta3*eps[i-3]+eps[i]+0.5
 }
 plot.ts(y)
 
@@ -33,7 +33,7 @@ plot.ts(u1)
 u=c()
 u[1] <- x[1]
 for (i in 2:100) {
-  u[i] <- (x[i] + u[i-1]*runif(1,0.95,1.05))
+  u[i] <- (x[i] + u[i-1])#*runif(1,0.95,1.05))
 }
 plot.ts(u)
 
