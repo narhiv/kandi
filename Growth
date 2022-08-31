@@ -1,0 +1,41 @@
+#Set the ages and intervals of height measurements
+age <- c(seq(1,2,0.25),seq(3,8,1),seq(8.5,18,0.5))
+#Range of observations (ages)
+rng <- c(1,18)
+#Setting up a B-spline basis of order 6 with knots at ages
+knots <- age
+norder <- 6
+nbasis <- length(knots) + norder -2
+hgtbasis <- create.bspline.basis(rng,nbasis,norder,knots)
+#Setting up a functional parameter object for estimating growth curves. We set 
+#the 4th derivative as the penalizer to guarantee a smooth 2nd derivative
+Lfdobj <- 4
+lambda <- 10^(-0.5)
+growfdPar <- fdPar(hgtbasis, Lfdobj, lambda)
+#Smoothing of the data
+hgtmfd <- smooth.basis(age, growth$hgtm, growfdPar)$fd #The data of boys
+hgtffd <- smooth.basis(age, growth$hgtf, growfdPar)$fd #The data of girls
+#The velocities of the growth curves (computed just for the sake of it)
+velmfd <- deriv.fd(hgtmfd,1)
+velffd <- deriv.fd(hgtffd,1)
+#The accelerations of the growth curves, show growth spurts etc.
+accmfd <- deriv.fd(hgtmfd,2)
+accffd <- deriv.fd(hgtffd,2)
+#Set this if you want to show growth curves and accelerations simultaneously
+par(mfrow=c(2,1))
+#Set this if you want to show them singularly
+par(mfrow=c(1,1))
+
+#Plotting the growth curves, first female then male
+plot(hgtffd[15:30]) #The numbers can be changed to pick random curves instead of the first 10 for example
+plot(hgtmfd[15:30], xlab='Age (years)', ylab='Height(cm)')
+
+#Plotting the accelerations, only male shown here
+plot(accmfd[15:30], xlab='Age (years)', ylab= 'Acceleration' ~ (cm/yr^2))
+
+#If it is desirable to plot boys and girls separately on the same plot, use
+plot(hgtmfd[15:30], xlab='Age(years)', ylab='Height(cm)', col='Blue',lty=1,xaxs="i",yaxs="i")
+lines(hgtffd[15:30], xlab='Age (years)', ylab='Height(cm)',col="Red",lty=1,xaxs="i",yaxs="i")
+
+plot(accmfd[15:30], xlab='Age(years)', ylab='Height(cm)', col='Blue',lty=1,xaxs="i",yaxs="i")
+lines(accffd[15:30], xlab='Age (years)', ylab='Height(cm)',col="Red",lty=1,xaxs="i",yaxs="i")
