@@ -1,0 +1,58 @@
+par(mfrow=c(2,2),mar=c(1.8,1.8,1.8,1.8))
+for (depth in c("halfspace", "Mahalanobis", "simplicial", "spatial")){
+  depth.contours(m, depth = depth, main = depth)
+}
+depth.contours(a,depth="none")
+
+#Uniform distribution
+x1 <- runif(100)
+x2 <- runif(100)
+x3 <- cbind(x1,x2)
+
+#Multivariate elliptical (normal) distribution
+Sigma <- matrix(c(10,3,3,2),2,2) #Random covariance matrix used in the example
+m <-mvrnorm(n=100, rep(0,2), Sigma)
+
+#Moon-shaped dataset, kinda useless tbh
+#j <- generateCrescentMoon(50,2,1)
+
+#Used to create a skewed distribution
+y1 <- rbeta(100,10,2)
+y2 <- cbind(y1,m[,1])
+
+par(mfrow=c(2,2),mar=c(1.8,1.8,1.8,1.8))
+for (depth in c("halfspace", "Mahalanobis", "simplicial", "spatial")){
+  depth.contours(a, depth = depth, main = depth)
+} #a is the combination of two random distributions eg. cbind(x1,x2), where x1 and x2 are both
+#random datasets created with rnorm
+
+#Convex but skewed dataset
+par(mfrow=c(2,2),mar=c(1.8,1.8,1.8,1.8))
+for (depth in c("halfspace", "Mahalanobis", "simplicial", "spatial")){
+   depth.contours(y2, depth = depth, main = depth)
+}
+
+z1 <- runif(100, min=-1, max=1)
+#z2 <- runif(100, min=1.5*(1-z1^2),max=2*(1-z1^2))
+#plot(z1,runif(100,min=1.5*(1-z1^2),max=2*(1-z1^2)))
+#plot(z1,runif(100,min=1*(1-z1^2),max=2*(1-z1^2)))
+#plot(z1,runif(100,min=1*(1-z1^2),max=1.5*(1-z1^2)))
+#plot(z1,runif(100,min=1*(1-z1^2),max=1.5*(1.5-z1^2)))
+#plot(z1,runif(100,min=1*(0.8-z1^2),max=2*(1-z1^2)))
+#plot(z1,runif(100,min=1.3*(0.8-z1^2),max=2*(1.2-z1^2)))
+z3 <- cbind(z1,runif(100,min=1.3*(0.8-z1^2),max=2*(1.2-z1^2)))
+#Testing out different parameters to get the best possible banana shape
+par(mfrow=c(2,2),mar=c(1.8,1.8,1.8,1.8))
+for (depth in c("halfspace", "Mahalanobis", "simplicial", "spatial")){
+  depth.contours(z3, depth = depth, main = depth)
+}
+
+par(mfrow=c(2,2),mar=c(1.8,1.8,1.8,1.8))
+plot(m, main="Multivariate normal distribution") #elliptic/convex
+plot(y2, main="Skewed multivariate normal distribution") #convex but skewed
+plot(z3, main="Non-convex distribution") #Banana dataset, nonconvex
+
+
+
+
+
