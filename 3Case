@@ -1,3 +1,4 @@
+#MAHDOLLINEN VIIMEINEN CASE MISSÄ KUMPIKAAN EI TOIMI?
 vals5=c()
 vals6=c()
 for (j in 1:100) {
@@ -11,10 +12,10 @@ for(i in 1:n)	y3[i,]<-runif(1,0,1)*sin(t.)+runif(1,0,1)*cos(t.) #values of matri
 for (j in 1:1) z3[j,] <- 0.5*sin(t.)+0.5*cos(t.)+0.2*sin(300*t.)
 ypz5 <- rbind(y3,z3)
 ypz6 <- derivcurves(ypz5)
-plot(fdata(ypz5),col="gray")
+plot(fdata(ypz5),col="gray",main="\n")
 lines(fdata(ypz5[100,]),col="black")
 plot(fdata(ypz6),col="gray")
-lines(fdata(ypz6[100,]),col="black")
+lines(fdata(ypz6[100,]),col="black",main="\n")
 #lines(fdata(ypz5[20,]),col="blue")
 mfhypz3 <- MFHD(ypz5,ypz6)
 #sort(mfhypz3$MFHDdepth,index.return=TRUE)
